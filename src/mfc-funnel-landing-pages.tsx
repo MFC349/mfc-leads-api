@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowRight, ChevronDown, CheckCircle, Loader2, ExternalLink } from "lucide-react";
 
 type ProofItem = {
   label: string;
@@ -13,7 +12,7 @@ type ProcessStep = {
   text: string;
 };
 
-type LandingPageConfig = {
+export type LandingPageConfig = {
   slug: string;
   brand: string;
   eyebrow: string;
@@ -29,7 +28,127 @@ type LandingPageConfig = {
   closeTitle: string;
   closeText: string;
   closeCta: { label: string; href: string };
+  programInterest: string;
+  formHeadline: string;
+  formSubtext: string;
+  canonical: string;
 };
+
+const WEBHOOK_URL = "https://n8n.moldedfortitude.com/webhook/mfc-lead-qualify";
+
+function LeadCaptureForm({ config }: { config: LandingPageConfig }) {
+  const [form, setForm] = useState({ full_name: "", email: "", phone: "", problem_summary: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.email || !form.full_name) return;
+    setStatus("sending");
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          lead_source: `landing_page_${config.slug}`,
+          program_interest: config.programInterest,
+          lead_type: "individual",
+          decision_maker_status: "decision-maker",
+          timeline: "ready",
+          budget_status: "exploring"
+        })
+      });
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "success") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="border border-[#C9B27B]/40 bg-[#C9B27B]/5 p-8 text-center"
+      >
+        <CheckCircle className="mx-auto h-12 w-12 text-[#C9B27B]" />
+        <h3 className="mt-4 text-2xl font-bold uppercase text-[#F5EFE3]">You are in.</h3>
+        <p className="mt-2 text-sm text-[#E8DECC]/78">
+          Check your inbox. Clay will be in touch shortly.
+        </p>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-xs uppercase tracking-[0.3em] text-[#C9B27B]/85 mb-2">
+          Full Name *
+        </label>
+        <input
+          type="text"
+          required
+          value={form.full_name}
+          onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+          className="w-full border border-white/20 bg-black/60 px-4 py-3 text-sm text-[#F5EFE3] placeholder-white/30 outline-none focus:border-[#C9B27B] transition-colors"
+          placeholder="Your name"
+        />
+      </div>
+      <div>
+        <label className="block text-xs uppercase tracking-[0.3em] text-[#C9B27B]/85 mb-2">
+          Email *
+        </label>
+        <input
+          type="email"
+          required
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="w-full border border-white/20 bg-black/60 px-4 py-3 text-sm text-[#F5EFE3] placeholder-white/30 outline-none focus:border-[#C9B27B] transition-colors"
+          placeholder="your@email.com"
+        />
+      </div>
+      <div>
+        <label className="block text-xs uppercase tracking-[0.3em] text-[#C9B27B]/85 mb-2">
+          Phone
+        </label>
+        <input
+          type="tel"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          className="w-full border border-white/20 bg-black/60 px-4 py-3 text-sm text-[#F5EFE3] placeholder-white/30 outline-none focus:border-[#C9B27B] transition-colors"
+          placeholder="+1 (555) 000-0000"
+        />
+      </div>
+      <div>
+        <label className="block text-xs uppercase tracking-[0.3em] text-[#C9B27B]/85 mb-2">
+          What are you working through?
+        </label>
+        <textarea
+          value={form.problem_summary}
+          onChange={(e) => setForm({ ...form, problem_summary: e.target.value })}
+          rows={3}
+          className="w-full border border-white/20 bg-black/60 px-4 py-3 text-sm text-[#F5EFE3] placeholder-white/30 outline-none focus:border-[#C9B27B] transition-colors resize-none"
+          placeholder="Brief description of your situation or goals..."
+        />
+      </div>
+      {status === "error" && (
+        <p className="text-sm text-red-400">Something went wrong. Try again or email clay@moldedfortitude.com directly.</p>
+      )}
+      <button
+        type="submit"
+        disabled={status === "sending"}
+        className="group inline-flex w-full min-h-[52px] items-center justify-center gap-2 border border-[#C9B27B] bg-[#C9B27B] px-6 text-sm font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-200 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {status === "sending" ? (
+          <><Loader2 className="h-4 w-4 animate-spin" /> Submitting...</>
+        ) : (
+          <>{config.closeCta.label} <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" /></>
+        )}
+      </button>
+    </form>
+  );
+}
 
 const ASSET_MAP = {
   trainingHero: "/assets/mfc/training-hero.png",
@@ -41,7 +160,7 @@ const ASSET_MAP = {
   beastMark: "/assets/mfc/beast-paw-mark.png"
 };
 
-const PAGE_CONFIGS: Record<string, LandingPageConfig> = {
+export const PAGES: Record<string, LandingPageConfig> = {
   "21-day-reset": {
     slug: "21-day-reset",
     brand: "Molded Fortitude Consulting",
@@ -88,7 +207,11 @@ const PAGE_CONFIGS: Record<string, LandingPageConfig> = {
     closeCta: {
       label: "Start The Reset",
       href: "https://meet.brevo.com/clayton-williams/discovery-call"
-    }
+    },
+    programInterest: "fitness",
+    formHeadline: "Lock In Your Reset",
+    formSubtext: "Drop your info below. Clay will reach out with your next step.",
+    canonical: "https://reset.moldedfortitude.com"
   },
 
   "healing-the-warrior-spirit": {
@@ -137,7 +260,11 @@ const PAGE_CONFIGS: Record<string, LandingPageConfig> = {
     closeCta: {
       label: "Apply For Support",
       href: "https://meet.brevo.com/clayton-williams"
-    }
+    },
+    programInterest: "healing",
+    formHeadline: "Step Forward",
+    formSubtext: "Share where you are. This is the beginning of honest work.",
+    canonical: "https://healing.moldedfortitude.com"
   },
 
   "culture-to-contract": {
@@ -186,7 +313,11 @@ const PAGE_CONFIGS: Record<string, LandingPageConfig> = {
     closeCta: {
       label: "Enter The Cohort",
       href: "https://meet.brevo.com/clayton-williams"
-    }
+    },
+    programInterest: "leadership",
+    formHeadline: "Apply For The Cohort",
+    formSubtext: "Spots are limited. Tell us about your vision and readiness.",
+    canonical: "https://leadership.moldedfortitude.com"
   },
 
   "carving-workshops": {
@@ -235,9 +366,22 @@ const PAGE_CONFIGS: Record<string, LandingPageConfig> = {
     closeCta: {
       label: "Bring A Workshop In",
       href: "https://meet.brevo.com/clayton-williams"
-    }
+    },
+    programInterest: "workshop",
+    formHeadline: "Request A Workshop",
+    formSubtext: "Tell us about your group, community, or program. We will design the right fit.",
+    canonical: "https://carving.moldedfortitude.com"
   }
 };
+
+const SITE_LINKS = [
+  { label: 'All Programs', href: 'https://moldedfortitude.com', description: 'Explore all MFC offerings' },
+  { label: '21-Day Reset', href: 'https://reset.moldedfortitude.com', description: 'Discipline & fitness transformation' },
+  { label: 'Warrior Spirit', href: 'https://healing.moldedfortitude.com', description: 'Healing for veterans & first responders' },
+  { label: 'Culture to Contract', href: 'https://leadership.moldedfortitude.com', description: 'Indigenous leadership development' },
+  { label: 'Carving Workshops', href: 'https://carving.moldedfortitude.com', description: 'Hands-on cultural workshops' },
+  { label: 'Grant Writing', href: 'https://grant.moldedfortitude.com', description: 'Grant writing services' },
+];
 
 const sectionFade = {
   hidden: { opacity: 0, y: 28 },
@@ -248,157 +392,13 @@ const sectionFade = {
   }
 };
 
-// Hub/Index Page Component
-export function LandingPageHub() {
-  return (
-    <main className="bg-black text-[#F1E8D8]">
-      <section className="relative isolate min-h-screen overflow-hidden border-b border-[#9C8350]/20 flex flex-col">
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.0),rgba(0,0,0,0.92))]" />
-
-        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-5 pb-8 pt-6 sm:px-8 lg:px-12 w-full">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <img
-                src={ASSET_MAP.beastMark}
-                alt="MFC mark"
-                className="h-10 w-10 object-contain"
-              />
-              <div>
-                <p className="text-[0.65rem] uppercase tracking-[0.35em] text-[#C9B27B]">
-                  Molded Fortitude Consulting
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={sectionFade}
-            className="max-w-4xl py-16 sm:py-20 lg:py-24"
-          >
-            <p className="mb-5 text-xs uppercase tracking-[0.4em] text-[#C9B27B]">
-              Discipline. Culture. Change.
-            </p>
-
-            <h1 className="max-w-3xl text-5xl font-black uppercase leading-[0.95] tracking-hero text-[#F5EFE3] sm:text-6xl md:text-7xl lg:text-8xl">
-              Raw Transformation
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-base leading-7 text-[#E8DECC]/82 sm:text-lg">
-              Choose the work that matches where you are. Each path is built for real people doing real things.
-            </p>
-
-            <div className="mt-12">
-              <p className="text-xs uppercase tracking-[0.4em] text-[#C9B27B] mb-8">
-                Select Your Path
-              </p>
-              
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-3xl">
-                <Link
-                  to="/21-day-reset"
-                  className="group block p-6 border border-[#9C8350]/40 hover:border-[#C9B27B] transition-colors duration-200"
-                >
-                  <h3 className="text-xl font-bold uppercase tracking-wide text-[#F5EFE3] group-hover:text-[#C9B27B] transition-colors">
-                    21-Day Reset
-                  </h3>
-                  <p className="mt-2 text-sm text-[#E8DECC]/72">
-                    Build standards that hold on bad days
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-[#C9B27B] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-xs uppercase tracking-wider">Explore</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </div>
-                </Link>
-
-                <Link
-                  to="/healing-the-warrior-spirit"
-                  className="group block p-6 border border-[#9C8350]/40 hover:border-[#C9B27B] transition-colors duration-200"
-                >
-                  <h3 className="text-xl font-bold uppercase tracking-wide text-[#F5EFE3] group-hover:text-[#C9B27B] transition-colors">
-                    Healing the Warrior Spirit
-                  </h3>
-                  <p className="mt-2 text-sm text-[#E8DECC]/72">
-                    Identity restoration through culture and structure
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-[#C9B27B] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-xs uppercase tracking-wider">Explore</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </div>
-                </Link>
-
-                <Link
-                  to="/culture-to-contract"
-                  className="group block p-6 border border-[#9C8350]/40 hover:border-[#C9B27B] transition-colors duration-200"
-                >
-                  <h3 className="text-xl font-bold uppercase tracking-wide text-[#F5EFE3] group-hover:text-[#C9B27B] transition-colors">
-                    Culture to Contract
-                  </h3>
-                  <p className="mt-2 text-sm text-[#E8DECC]/72">
-                    From lived wisdom to enterprise readiness
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-[#C9B27B] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-xs uppercase tracking-wider">Explore</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </div>
-                </Link>
-
-                <Link
-                  to="/carving-workshops"
-                  className="group block p-6 border border-[#9C8350]/40 hover:border-[#C9B27B] transition-colors duration-200"
-                >
-                  <h3 className="text-xl font-bold uppercase tracking-wide text-[#F5EFE3] group-hover:text-[#C9B27B] transition-colors">
-                    Carving Workshops
-                  </h3>
-                  <p className="mt-2 text-sm text-[#E8DECC]/72">
-                    Creation as discipline, art as reclamation
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-[#C9B27B] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-xs uppercase tracking-wider">Explore</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-          <div className="flex items-center gap-2 text-[#F5EFE3]/55">
-            <ChevronDown className="h-4 w-4" />
-            <span className="text-xs uppercase tracking-[0.28em]">Scroll</span>
-          </div>
-        </div>
-      </section>
-
-      <motion.section
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionFade}
-        className="border-b border-white/10"
-      >
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-[#C9B27B]">
-              The Foundation
-            </p>
-            <h2 className="mt-4 max-w-2xl text-3xl font-black uppercase leading-tight text-[#F5EFE3] sm:text-4xl">
-              Every path builds on the same core.
-            </h2>
-            <p className="mt-5 max-w-xl text-base leading-7 text-[#E8DECC]/78">
-              Discipline. Culture. Identity. These are not soft concepts. They are the frame that everything else hangs on. Choose where to start.
-            </p>
-          </div>
-        </div>
-      </motion.section>
-    </main>
-  );
-}
-
 // Landing Page View Component
-function LandingPageView({ page }: { page: LandingPageConfig }) {
+export function LandingPageView({ page }: { page: LandingPageConfig }) {
   const { scrollYProgress } = useScroll();
   const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "16%"]);
   const heroOverlayOpacity = useTransform(scrollYProgress, [0, 0.2], [0.35, 0.6]);
+
+  const footerLinks = SITE_LINKS.filter((link) => link.href !== page.canonical);
 
   return (
     <main className="bg-black text-[#F1E8D8] selection:bg-[#9C8350] selection:text-black">
@@ -435,12 +435,12 @@ function LandingPageView({ page }: { page: LandingPageConfig }) {
                 </p>
               </div>
             </div>
-            <Link 
-              to="/" 
+            <a
+              href="https://moldedfortitude.com"
               className="text-xs uppercase tracking-[0.28em] text-white/55 hover:text-[#C9B27B] transition-colors"
             >
-              Back
-            </Link>
+              All Programs
+            </a>
           </div>
 
           <motion.div
@@ -586,12 +586,53 @@ function LandingPageView({ page }: { page: LandingPageConfig }) {
         </div>
       </motion.section>
 
+      {/* Lead Capture Form */}
+      <motion.section
+        id="apply"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionFade}
+        className="border-b border-white/10 bg-[linear-gradient(to_bottom,rgba(201,178,123,0.08),rgba(0,0,0,0))]"
+      >
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-start">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#C9B27B]">
+                Take Action
+              </p>
+              <h2 className="mt-4 text-4xl font-black uppercase leading-tight text-[#F5EFE3] sm:text-5xl">
+                {page.formHeadline}
+              </h2>
+              <p className="mt-5 max-w-lg text-base leading-7 text-[#E8DECC]/78">
+                {page.formSubtext}
+              </p>
+              <div className="mt-8 flex items-center gap-4">
+                <div className="h-px flex-1 bg-white/10" />
+                <span className="text-xs uppercase tracking-[0.3em] text-white/40">or</span>
+                <div className="h-px flex-1 bg-white/10" />
+              </div>
+              <a
+                href={page.closeCta.href}
+                className="mt-6 inline-flex items-center gap-2 text-sm text-[#C9B27B] hover:text-[#F5EFE3] transition-colors"
+              >
+                Skip the form — book a call directly <ArrowRight className="h-3 w-3" />
+              </a>
+            </div>
+            <div>
+              <LeadCaptureForm config={page} />
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Close CTA */}
       <motion.section
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
         variants={sectionFade}
-        className="border-b border-white/10 bg-[linear-gradient(to_bottom,rgba(201,178,123,0.06),rgba(0,0,0,0))]"
+        className="border-b border-white/10"
       >
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
           <div className="max-w-2xl">
@@ -616,6 +657,34 @@ function LandingPageView({ page }: { page: LandingPageConfig }) {
         </div>
       </motion.section>
 
+      {/* Backlinks Footer — Explore Our Programs */}
+      <section className="border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-12">
+          <p className="text-xs uppercase tracking-[0.4em] text-[#C9B27B] mb-6">
+            Explore Our Programs
+          </p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {footerLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block p-4 border border-white/10 hover:border-[#C9B27B]/50 transition-colors"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wider text-[#C9B27B] group-hover:text-[#F5EFE3] transition-colors flex items-center gap-1">
+                  {link.label}
+                  <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </p>
+                <p className="mt-1 text-xs text-[#E8DECC]/55 leading-relaxed">
+                  {link.description}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:px-12">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
@@ -629,31 +698,15 @@ function LandingPageView({ page }: { page: LandingPageConfig }) {
                 Molded Fortitude Consulting
               </span>
             </div>
-            <Link 
-              to="/" 
+            <a
+              href="https://moldedfortitude.com"
               className="text-xs uppercase tracking-[0.28em] text-white/55 hover:text-[#C9B27B] transition-colors"
             >
               View All Programs
-            </Link>
+            </a>
           </div>
         </div>
       </footer>
     </main>
   );
-}
-
-export function ResetLandingPage() {
-  return <LandingPageView page={PAGE_CONFIGS["21-day-reset"]} />;
-}
-
-export function HealingWarriorSpiritLandingPage() {
-  return <LandingPageView page={PAGE_CONFIGS["healing-the-warrior-spirit"]} />;
-}
-
-export function CultureToContractLandingPage() {
-  return <LandingPageView page={PAGE_CONFIGS["culture-to-contract"]} />;
-}
-
-export function CarvingWorkshopsLandingPage() {
-  return <LandingPageView page={PAGE_CONFIGS["carving-workshops"]} />;
 }
