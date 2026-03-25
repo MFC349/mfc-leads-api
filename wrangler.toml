@@ -4,6 +4,7 @@ compatibility_date = "2024-12-01"
 
 [assets]
 directory = "./dist"
+serve_directly = false
 
 # Custom domains for each landing page subdomain
 routes = [
