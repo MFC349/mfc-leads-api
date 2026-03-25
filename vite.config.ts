@@ -10,7 +10,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         reset: resolve(__dirname, 'reset.html'),
         healing: resolve(__dirname, 'healing.html'),
-        leadership: resolve(__dirname, 'leadership.html'),
+        culture: resolve(__dirname, 'culture.html'),
         carving: resolve(__dirname, 'carving.html'),
       }
     }
