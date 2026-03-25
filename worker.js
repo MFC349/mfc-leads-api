@@ -4,7 +4,7 @@
 const SUBDOMAIN_MAP = {
   'reset': '/reset.html',
   'healing': '/healing.html',
-  'leadership': '/leadership.html',
+  'culture': '/culture.html',
   'carving': '/carving.html',
 };
 
@@ -19,8 +19,10 @@ export default {
     
     // If we're on a known subdomain and requesting the root path, serve the landing page
     if (subdomain && SUBDOMAIN_MAP[subdomain] && (url.pathname === '/' || url.pathname === '')) {
-      const assetUrl = new URL(SUBDOMAIN_MAP[subdomain], request.url);
-      return env.ASSETS.fetch(new Request(assetUrl, request));
+      // Build a new URL pointing to the correct HTML file
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = SUBDOMAIN_MAP[subdomain];
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
     
     // For all other requests (static assets, other paths), pass through to assets
