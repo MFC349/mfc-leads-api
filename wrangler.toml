@@ -1,5 +1,14 @@
 name = "mfc-leads-api"
+main = "worker.js"
 compatibility_date = "2024-12-01"
 
 [assets]
 directory = "./dist"
+
+# Custom domains for each landing page subdomain
+routes = [
+  { pattern = "reset.moldedfortitude.com", custom_domain = true },
+  { pattern = "healing.moldedfortitude.com", custom_domain = true },
+  { pattern = "leadership.moldedfortitude.com", custom_domain = true },
+  { pattern = "carving.moldedfortitude.com", custom_domain = true }
+]
