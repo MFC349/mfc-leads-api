@@ -171,7 +171,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
     heroImage: ASSET_MAP.trainingHero,
     primaryCta: {
       label: "Book Your Reset Call",
-      href: "https://meet.brevo.com/clayton-williams/discovery-call"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     secondaryCta: {
       label: "See The Reset",
@@ -206,7 +206,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
       "You need a system that survives pressure. Book the call. We will see if you are ready for the work.",
     closeCta: {
       label: "Start The Reset",
-      href: "https://meet.brevo.com/clayton-williams/discovery-call"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     programInterest: "fitness",
     formHeadline: "Lock In Your Reset",
@@ -224,7 +224,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
     heroImage: ASSET_MAP.warriorSpiritHero,
     primaryCta: {
       label: "Book A Discovery Call",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     secondaryCta: {
       label: "View The Work",
@@ -259,7 +259,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
       "It is honest work with structure behind it. If that is what you are after, step forward properly.",
     closeCta: {
       label: "Apply For Support",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     programInterest: "healing",
     formHeadline: "Step Forward",
@@ -277,7 +277,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
     heroImage: ASSET_MAP.leadershipHero,
     primaryCta: {
       label: "Book Partnership Call",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     secondaryCta: {
       label: "See Program Fit",
@@ -312,7 +312,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
       "If your work is meant to serve the next seven generations, it deserves more than loose notes and hope.",
     closeCta: {
       label: "Enter The Cohort",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     programInterest: "leadership",
     formHeadline: "Apply For The Cohort",
@@ -330,7 +330,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
     heroImage: ASSET_MAP.carvingHero,
     primaryCta: {
       label: "Book A Workshop",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     secondaryCta: {
       label: "See Workshop Value",
@@ -365,7 +365,7 @@ export const PAGES: Record<string, LandingPageConfig> = {
       "Bring this into your school, program, team, or community and make the time mean something.",
     closeCta: {
       label: "Bring A Workshop In",
-      href: "https://meet.brevo.com/clayton-williams"
+      href: "https://meet.brevo.com/clay-mfc"
     },
     programInterest: "workshop",
     formHeadline: "Request A Workshop",

@@ -24,7 +24,7 @@ function Nav() {
         <div className="flex items-center gap-3">
           <span className="hidden sm:block text-blue-400 text-sm font-medium tracking-widest uppercase">GrantSignal Desk</span>
           <a
-            href="https://meet.brevo.com/clayton-williams/mfc-connect"
+            href="https://meet.brevo.com/clay-mfc"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
@@ -61,7 +61,7 @@ function Hero() {
           </motion.p>
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <a
-              href="https://meet.brevo.com/clayton-williams/mfc-connect"
+              href="https://meet.brevo.com/clay-mfc"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-4 rounded-xl transition-all hover:shadow-lg hover:shadow-blue-600/30 text-lg"
@@ -447,7 +447,7 @@ function Pricing() {
                   ))}
                 </ul>
                 <a
-                  href="https://meet.brevo.com/clayton-williams/mfc-connect"
+                  href="https://meet.brevo.com/clay-mfc"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`w-full text-center py-3 rounded-xl font-semibold text-sm transition-all ${plan.tag ? 'bg-blue-600 hover:bg-blue-500 text-white hover:shadow-lg hover:shadow-blue-600/30' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white'}`}
@@ -666,7 +666,7 @@ function ContactForm() {
           </motion.form>
           <motion.div variants={fadeUp} className="text-center mt-8">
             <a
-              href="https://meet.brevo.com/clayton-williams/mfc-connect"
+              href="https://meet.brevo.com/clay-mfc"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
