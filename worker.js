@@ -19,9 +19,16 @@ export default {
     
     // If we're on a known subdomain and requesting the root path, serve the landing page
     if (subdomain && SUBDOMAIN_MAP[subdomain] && (url.pathname === '/' || url.pathname === '')) {
-      // Build a new URL pointing to the correct HTML file
       const assetUrl = new URL(request.url);
       assetUrl.pathname = SUBDOMAIN_MAP[subdomain];
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+    
+    // Root domain or default: serve index.html for root path
+    // With html_handling="none", we must explicitly map / to /index.html
+    if (url.pathname === '/' || url.pathname === '') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/index.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
     
