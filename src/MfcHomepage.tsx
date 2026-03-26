@@ -25,7 +25,7 @@ const LANES: Lane[] = [
   },
   {
     title: "Healing the Warrior Spirit",
-    text: "Restore identity through grounded, trauma-informed work. For those who served — and those still carrying the weight.",
+    text: "Restore identity through grounded, trauma-informed work. For those carrying weight — and ready to set it down properly.",
     href: "https://healing.moldedfortitude.com",
     icon: <Heart className="w-7 h-7" />,
     accent: "from-rose-500/20 to-transparent",
@@ -47,9 +47,9 @@ const LANES: Lane[] = [
 ];
 
 const PROOF_ITEMS = [
-  "Veteran-founded",
+  "Founded by Clay — the OG",
   "Real systems, not templates",
-  "Trusted by nonprofits & operators",
+  "Trusted by operators & organizations",
   "Built for pressure, not perfection",
 ];
 
