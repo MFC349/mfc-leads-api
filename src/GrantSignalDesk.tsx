@@ -35,14 +35,14 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.38),rgba(0,0,0,0.68),rgba(0,0,0,0.92))]" />
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-5 pb-8 pt-6 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <img src="/favicon.png" alt="MFC mark" className="h-10 w-10 object-contain" />
-            <div>
-              <p className="text-[0.65rem] uppercase tracking-[0.35em] text-[#C9B27B]">
+            <img src="/favicon.png" alt="MFC mark" className="h-10 w-10 flex-shrink-0 object-contain" />
+            <div className="min-w-0">
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-[#C9B27B] sm:text-[0.65rem] sm:tracking-[0.35em]">
                 Molded Fortitude Consulting
               </p>
-              <p className="text-xs uppercase tracking-[0.28em] text-white/65">
+              <p className="text-[0.65rem] uppercase tracking-[0.22em] text-white/65 sm:text-xs sm:tracking-[0.28em]">
                 GrantSignal Desk
               </p>
             </div>
@@ -50,7 +50,7 @@ function Hero() {
           <div className="flex items-center gap-4">
             <a
               href="https://moldedfortitude.com"
-              className="text-xs uppercase tracking-[0.28em] text-white/55 hover:text-[#C9B27B] transition-colors"
+              className="hidden text-xs uppercase tracking-[0.28em] text-white/55 hover:text-[#C9B27B] transition-colors sm:inline"
             >
               All Programs
             </a>
