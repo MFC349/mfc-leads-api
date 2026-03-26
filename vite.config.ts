@@ -12,6 +12,7 @@ export default defineConfig({
         healing: resolve(__dirname, 'healing.html'),
         culture: resolve(__dirname, 'culture.html'),
         carving: resolve(__dirname, 'carving.html'),
+        grant: resolve(__dirname, 'grant.html'),
       }
     }
   }

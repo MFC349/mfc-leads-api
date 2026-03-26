@@ -6,6 +6,7 @@ const SUBDOMAIN_MAP = {
   'healing': '/healing.html',
   'culture': '/culture.html',
   'carving': '/carving.html',
+  'grant': '/grant.html',
 };
 
 export default {
