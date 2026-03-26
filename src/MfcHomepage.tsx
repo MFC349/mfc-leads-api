@@ -47,8 +47,8 @@ const LANES: Lane[] = [
 ];
 
 const PROOF_ITEMS = [
-  "Founded by Clay — the OG",
-  "Real systems, not templates",
+  "Systems that hold under pressure",
+  "Real structure, not templates",
   "Trusted by operators & organizations",
   "Built for pressure, not perfection",
 ];
