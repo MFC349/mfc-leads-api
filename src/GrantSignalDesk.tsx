@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, ChevronDown, ChevronUp, ArrowRight, Shield, Database, BarChart3, Tag, Users, Zap } from 'lucide-react';
 
-const WEBHOOK_URL = 'https://n8n.moldedfortitude.com/webhook/mfc-lead-qualify';
+const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/webhook?token=7840f43dd7e9238d92ee534939eb5429';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -546,7 +546,16 @@ function ContactForm() {
       await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'grant.moldedfortitude.com', timestamp: new Date().toISOString() }),
+        body: JSON.stringify({
+          full_name: form.name,
+          email: form.email,
+          organization: form.organization,
+          program_interest: 'consulting',
+          problem_summary: form.message,
+          budget_status: form.budget,
+          lead_source: 'grant.moldedfortitude.com',
+          platform: 'web'
+        }),
       });
       setStatus('success');
     } catch {

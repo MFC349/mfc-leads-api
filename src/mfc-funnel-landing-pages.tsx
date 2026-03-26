@@ -34,7 +34,7 @@ export type LandingPageConfig = {
   canonical: string;
 };
 
-const WEBHOOK_URL = "https://n8n.moldedfortitude.com/webhook/mfc-lead-qualify";
+const WEBHOOK_URL = "https://webhooks.tasklet.ai/v1/public/webhook?token=7840f43dd7e9238d92ee534939eb5429";
 
 function LeadCaptureForm({ config }: { config: LandingPageConfig }) {
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", problem_summary: "" });
